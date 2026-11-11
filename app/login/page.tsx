@@ -13,7 +13,7 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
     try {
-      const result = await authClient.signIn.social({ provider: 'google', callbackURL: '/login' })
+      const result = await authClient.signIn.social({ provider: 'google', callbackURL: '/' })
       if (result.error) throw result.error
     } catch (error) {
       console.error('[v0] Google OAuth failed:', error)

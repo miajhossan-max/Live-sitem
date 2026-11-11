@@ -1,14 +1,16 @@
 import type { NextRequest } from 'next/server'
 
-type Context = { params: Promise<{ path: string[] }> }
+type RouteContext = { params: Promise<{ path: string[] }> }
+type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
-async function getHandler(method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE', request: NextRequest, context: Context) {
+async function handleAuth(method: Method, request: NextRequest, context: RouteContext) {
   const { auth } = await import('@/lib/auth')
-  return auth.handler()[method](request, context)
+  const handlers = auth.handler()
+  return handlers[method](request, context)
 }
 
-export async function GET(request: NextRequest, context: Context) { return getHandler('GET', request, context) }
-export async function POST(request: NextRequest, context: Context) { return getHandler('POST', request, context) }
-export async function PUT(request: NextRequest, context: Context) { return getHandler('PUT', request, context) }
-export async function PATCH(request: NextRequest, context: Context) { return getHandler('PATCH', request, context) }
-export async function DELETE(request: NextRequest, context: Context) { return getHandler('DELETE', request, context) }
+export const GET = (request: NextRequest, context: RouteContext) => handleAuth('GET', request, context)
+export const POST = (request: NextRequest, context: RouteContext) => handleAuth('POST', request, context)
+export const PUT = (request: NextRequest, context: RouteContext) => handleAuth('PUT', request, context)
+export const PATCH = (request: NextRequest, context: RouteContext) => handleAuth('PATCH', request, context)
+export const DELETE = (request: NextRequest, context: RouteContext) => handleAuth('DELETE', request, context)
